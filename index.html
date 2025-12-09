@@ -378,9 +378,8 @@
       align-items: center;
     }
 
-    /* ★ 通販画像のサイズを安定させて見切れないようにする */
     .tuhan-thumb {
-      flex: 0 0 110px;      /* 幅を固定して暴走防止 */
+      flex: 0 0 110px;
       max-width: 110px;
       border-radius: 14px;
       overflow: hidden;
@@ -389,7 +388,7 @@
 
     .tuhan-thumb img {
       width: 100%;
-      height: auto;         /* 高さは自動にして見切れ防止 */
+      height: auto;
       display: block;
       object-fit: cover;
     }
@@ -719,13 +718,12 @@
         </a>
       </div>
 
-      <!-- ホーム追加案内（SNSの下に表示） -->
+      <!-- ホーム追加案内 -->
       <div id="install-hint" class="install-hint">
-        📱 スマホのホーム画面に追加しておくと、
-        CLIMAXポータルをアプリのようにすぐ開けます。<br />
+        📱 スマホのホーム画面に追加しておくと、CLIMAXポータルをアプリのように開けます。<br />
         <span class="install-hint-small">
-          iPhone：Safariの共有ボタン →「ホーム画面に追加」<br />
-          Android：Chromeのメニュー「︙」→「ホーム画面に追加」
+          iPhone：Safariの共有 →「ホーム画面に追加」<br />
+          Android：Chrome右上「︙」→「ホーム画面に追加」
         </span>
       </div>
 
@@ -733,9 +731,8 @@
   </div>
 
   <script>
-    // iOS判定 & すでにインストール済みかどうか
-    function isIOS() {
-      return /iphone|ipad|ipod/i.test(navigator.userAgent);
+    function isMobile() {
+      return /iPhone|Android|iPad|iPod/i.test(navigator.userAgent);
     }
     function isInstalled() {
       return window.matchMedia('(display-mode: standalone)').matches
@@ -746,13 +743,10 @@
       var hint = document.getElementById('install-hint');
       if (!hint) return;
 
-      // 今回は「iOSだけ表示」にしたいならこれ
-      if (isIOS() && !isInstalled()) {
+      // ★ SafariだけでなくChrome含む全スマホで表示
+      if (isMobile() && !isInstalled()) {
         hint.style.display = 'block';
       }
-
-      // どの環境でも常に出したいなら ↓ に変えてもOK
-      // hint.style.display = 'block';
     });
   </script>
 </body>
