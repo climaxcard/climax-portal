@@ -379,7 +379,7 @@
     }
 
     .tuhan-thumb {
-      flex: 0 0 110px;
+      flex: 0 0 110px;      /* 幅を固定して暴走防止 */
       max-width: 110px;
       border-radius: 14px;
       overflow: hidden;
@@ -388,7 +388,7 @@
 
     .tuhan-thumb img {
       width: 100%;
-      height: auto;
+      height: auto;         /* 高さは自動にして見切れ防止 */
       display: block;
       object-fit: cover;
     }
@@ -718,12 +718,13 @@
         </a>
       </div>
 
-      <!-- ホーム追加案内 -->
+      <!-- ホーム追加案内（SNSの下に表示） -->
       <div id="install-hint" class="install-hint">
-        📱 スマホのホーム画面に追加しておくと、CLIMAXポータルをアプリのように開けます。<br />
+        📱 スマホのホーム画面に追加しておくと、
+        CLIMAXポータルをアプリのようにすぐ開けます。<br />
         <span class="install-hint-small">
-          iPhone：Safariの共有 →「ホーム画面に追加」<br />
-          Android：Chrome右上「︙」→「ホーム画面に追加」
+          iPhone：Safariの共有ボタン →「ホーム画面に追加」<br />
+          Android：Chromeのメニュー「︙」→「ホーム画面に追加」
         </span>
       </div>
 
@@ -731,9 +732,23 @@
   </div>
 
   <script>
+    // ★ Chrome純正の「ホーム画面に追加」固定バナーを抑止
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', function (e) {
+      // 画面下のデフォルトバナーを出さない
+      e.preventDefault();
+      deferredPrompt = e;
+      console.log('beforeinstallprompt suppressed');
+      // 必要ならここで自前ボタンから deferredPrompt.prompt() を呼べる
+    });
+
+    // スマホ判定（Safari / Chrome 共通）
     function isMobile() {
-      return /iPhone|Android|iPad|iPod/i.test(navigator.userAgent);
+      return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
+
+    // すでにインストール済みPWAなら案内を出さない
     function isInstalled() {
       return window.matchMedia('(display-mode: standalone)').matches
         || window.navigator.standalone === true;
@@ -743,7 +758,8 @@
       var hint = document.getElementById('install-hint');
       if (!hint) return;
 
-      // ★ SafariだけでなくChrome含む全スマホで表示
+      // ★ iOS Safari と同じく、スマホで未インストールのときだけ
+      // SNSの下にテキストブロックとして表示（固定バナーではない）
       if (isMobile() && !isInstalled()) {
         hint.style.display = 'block';
       }
