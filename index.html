@@ -234,6 +234,13 @@
         0 0 25px rgba(255, 92, 0, 0.5);
     }
 
+    /* ★ PCのみ 見出し下の線を消す */
+    @media (min-width: 721px) {
+      .heading-line {
+        display: none;
+      }
+    }
+
     /* =====================================
        Buylist Cards（ポケカ/デュエマ）
     ===================================== */
@@ -447,8 +454,10 @@
       display: block;
     }
 
+    /* ★ LINEだけ1.1倍に拡大（PC・スマホ共通） */
     .sns-icon.line img {
       width: 130%;
+      transform: scale(1.1);
     }
 
     .sns-icon:hover {
@@ -500,6 +509,7 @@
       .heading-line {
         width: 95%;
         margin-top: 12px;
+        display: block;   /* ★ SPではちゃんと表示 */
       }
 
       .title-grid {
