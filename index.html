@@ -4,10 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>カードショップCLIMAX | ポータル</title>
-　<link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#ff0000" />
+
+  <!-- PWA関連 -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#d40000" />
+  <link rel="apple-touch-icon" href="icons/climax_icon_192.png" />
 
   <script>
+    // Service Worker 登録（PWA用）
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker
@@ -21,7 +25,7 @@
       });
     }
   </script>
-  
+
   <style>
     /* =====================================
        Base
@@ -483,6 +487,43 @@
     }
 
     /* =====================================
+       iOS向けホーム追加ポップアップ
+    ===================================== */
+    #ios-tip {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: none; /* JSで必要なときだけ表示 */
+    }
+
+    .ios-popup {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 10px 18px;
+      font-size: 0.82rem;
+      color: #c40000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(255, 0, 0, 0.4);
+      animation: iosFadeIn 0.4s ease-out;
+      text-align: center;
+      max-width: 320px;
+    }
+
+    .ios-popup-small {
+      font-size: 0.72rem;
+      color: #777;
+      display: block;
+      margin-top: 4px;
+    }
+
+    @keyframes iosFadeIn {
+      from { opacity: 0; transform: translate(-50%, 15px); }
+      to   { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    /* =====================================
        Responsive
     ===================================== */
     @media (max-width: 900px) {
@@ -694,6 +735,34 @@
 
     </div>
   </div>
+
+  <!-- iPhone向け ホーム画面追加ガイド -->
+  <div id="ios-tip">
+    <div class="ios-popup">
+      📱 スマホのホーム画面に追加しておくと、
+      CLIMAXポータルをアプリのようにすぐ開けます。<br />
+      <span class="ios-popup-small">
+        iPhone：Safariの共有ボタン →「ホーム画面に追加」
+      </span>
+    </div>
+  </div>
+
+  <script>
+    // iOS判定 & すでにインストール済みかどうか
+    function isIOS() {
+      return /iphone|ipad|ipod/i.test(navigator.userAgent);
+    }
+    function isInstalled() {
+      return window.matchMedia('(display-mode: standalone)').matches
+        || window.navigator.standalone === true;
+    }
+
+    window.addEventListener('load', function () {
+      if (isIOS() && !isInstalled()) {
+        var tip = document.getElementById('ios-tip');
+        if (tip) tip.style.display = 'block';
+      }
+    });
+  </script>
 </body>
 </html>
-
