@@ -1,769 +1,602 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>カードショップCLIMAX | ポータル</title>
-
-  <!-- PWA関連 -->
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#d40000" />
-  <link rel="apple-touch-icon" href="icons/climax_icon_192.png" />
-
-  <script>
-    // Service Worker 登録（PWA用）
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker
-          .register("./service-worker.js")
-          .then(function (reg) {
-            console.log("ServiceWorker registered:", reg.scope);
-          })
-          .catch(function (err) {
-            console.log("ServiceWorker registration failed:", err);
-          });
-      });
-    }
-  </script>
-
-  <style>
-    /* =====================================
-       Base
-    ===================================== */
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top, #ffffff 0, #ffefe1 40%, #fce9ff 75%, #e5e9ff 100%),
-        repeating-linear-gradient(
-          -45deg,
-          rgba(255, 255, 255, 0.08) 0,
-          rgba(255, 255, 255, 0.08) 6px,
-          transparent 6px,
-          transparent 12px
-        );
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: #222;
-    }
-
-    .container {
-      width: 95%;
-      max-width: 1120px;
-      background: radial-gradient(circle at top left, #fff8ec 0, #ffffff 52%, #fff3ea 100%);
-      border-radius: 26px;
-      padding: 26px;
-      box-shadow:
-        0 20px 45px rgba(15, 23, 42, 0.25),
-        0 0 0 1px rgba(255, 255, 255, 0.7);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .container::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background:
-        radial-gradient(circle at 8% 0%, rgba(255, 83, 0, 0.12), transparent 55%),
-        radial-gradient(circle at 90% 100%, rgba(216, 0, 0, 0.1), transparent 55%),
-        radial-gradient(circle at 20% 100%, rgba(255, 214, 0, 0.18), transparent 55%);
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
-    .inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* =====================================
-       Logo
-    ===================================== */
-    .logo-block {
-      margin-bottom: 8px;
-    }
-
-    .logo-area {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      margin-bottom: 6px;
-    }
-
-    .logo-line {
-      flex: 1 1 auto;
-      height: 2px;
-      border-radius: 999px;
-      background: linear-gradient(
-        90deg,
-        rgba(255, 204, 0, 0),
-        rgba(255, 204, 0, 0.9),
-        rgba(255, 92, 0, 1),
-        rgba(216, 0, 0, 0)
-      );
-      position: relative;
-      overflow: hidden;
-    }
-
-    .logo-line::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      right: 0;
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #ffffff;
-      box-shadow:
-        0 0 0 2px rgba(255, 92, 0, 0.5),
-        0 0 12px rgba(255, 92, 0, 1);
-      transform: translateY(-50%);
-    }
-
-    .logo-line.left::after {
-      left: 0;
-      right: auto;
-    }
-
-    .logo-wrap img {
-      max-width: 260px;
-      width: 50vw;
-      height: auto;
-      display: block;
-      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.25));
-    }
-
-    .logo-badges {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 4px;
-    }
-
-    .logo-badge {
-      font-size: 0.7rem;
-      padding: 3px 9px;
-      border-radius: 999px;
-      border: 1px solid #ffd4d4;
-      background: linear-gradient(135deg, #fff7f7, #ffe0e0);
-      color: #c00000;
-      box-shadow: 0 2px 6px rgba(255, 0, 0, 0.16);
-    }
-
-    .logo-badge.sub {
-      border-color: #e0e0e0;
-      background: linear-gradient(135deg, #f7f7f7, #ffffff);
-      color: #666;
-      box-shadow: none;
-    }
-
-    .logo-sub {
-      text-align: center;
-      font-size: 0.72rem;
-      color: #777;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-top: 6px;
-      margin-bottom: 10px;
-    }
-
-    /* =====================================
-       Layout
-    ===================================== */
-    .main-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(260px, 1.3fr);
-      gap: 24px;
-      align-items: flex-start;
-    }
-
-    /* =====================================
-       Heading（線を長く＋中央）
-    ===================================== */
-    .heading-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      max-width: 780px;
-      margin-inline: auto;
-    }
-
-    .heading-deco {
-      flex: 1 1 auto;
-      height: 3px;
-      max-width: 200px;
-      border-radius: 999px;
-      background: linear-gradient(
-        90deg,
-        rgba(255, 233, 179, 0),
-        rgba(255, 233, 179, 1),
-        rgba(255, 209, 179, 1),
-        rgba(255, 233, 179, 0)
-      );
-      position: relative;
-      overflow: hidden;
-    }
-
-    .heading-deco::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.9),
-        transparent
-      );
-      animation: shine 3s linear infinite;
-    }
-
-    @keyframes shine {
-      0% { transform: translateX(-130%); }
-      100% { transform: translateX(130%); }
-    }
-
-    .heading {
-      text-align: center;
-      min-width: 240px;
-    }
-
-    .heading h1 {
-      margin: 0;
-      font-size: 1.32rem;
-      font-weight: 900;
-      letter-spacing: 0.14em;
-    }
-
-    .heading-line {
-      width: 400px;              /* PCではしっかり長く */
-      height: 4px;
-      margin: 10px auto 0;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #ffea00, #ff9800, #e00000);
-      box-shadow:
-        0 0 14px rgba(255, 205, 0, 0.8),
-        0 0 25px rgba(255, 92, 0, 0.5);
-    }
-
-    /* ★ PCのみ 見出し下の線を消す */
-    @media (min-width: 721px) {
-      .heading-line {
-        display: none;
-      }
-    }
-
-    /* =====================================
-       Buylist Cards（ポケカ/デュエマ）
-    ===================================== */
-    .title-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      max-width: 720px;
-      margin: 0 auto 6px;
-    }
-
-    .title-card {
-      background: radial-gradient(circle at top, #fff9f2 0, #ffffff 50%, #ffe6d5 100%);
-      border-radius: 20px;
-      padding: 12px;
-      overflow: hidden;
-      box-shadow:
-        0 10px 30px rgba(15, 23, 42, 0.2),
-        0 0 0 1px rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(255, 144, 77, 0.55);
-      transition: 0.18s ease;
-      cursor: pointer;
-    }
-
-    .title-card:hover {
-      transform: translateY(-5px) scale(1.02);
-      box-shadow:
-        0 15px 38px rgba(15, 23, 42, 0.28),
-        0 0 0 1px rgba(255, 255, 255, 0.95);
-    }
-
-    .title-thumb {
-      position: relative;
-      width: 100%;
-      padding-top: 62%;      /* 固定比率（ほぼ16:10） */
-      border-radius: 14px;
-      overflow: hidden;
-      background: transparent;
-    }
-
-    .title-thumb img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;   /* 見切れないように表示 */
-      background: transparent;
-      padding: 0;
-      display: block;
-    }
-
-    /* デュエマだけ少しズームして白フチを目立たせない */
-    .title-card:nth-child(2) .title-thumb img {
-      transform: scale(1.05);
-    }
-
-    .title-note {
-      margin-top: 10px;
-      font-size: 0.75rem;
-      color: #777;
-      text-align: center;
-    }
-
-    /* =====================================
-       Side Column（Shop Info & 通販）
-    ===================================== */
-    .side-column {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .side-card {
-      background: linear-gradient(145deg, #ffffff, #fff7ed);
-      border-radius: 18px;
-      padding: 14px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
-      border: 1px solid rgba(209, 213, 219, 0.9);
-    }
-
-    .side-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .shop-info-list {
-      list-style: none;
-      margin: 0;
-      padding-left: 2px;
-      font-size: 0.8rem;
-      color: #555;
-    }
-
-    .shop-info-list li + li {
-      margin-top: 4px;
-    }
-
-    .shop-info-highlight {
-      font-size: 0.76rem;
-      color: #c00000;
-      margin-top: 6px;
-    }
-
-    .tuhan-card {
-      display: flex;
-      gap: 10px;
-      text-decoration: none;
-      color: inherit;
-      background: radial-gradient(circle at top left, #fff7e5 0, #ffe5dd 50%, #ffd0b1 100%);
-      border-radius: 18px;
-      padding: 12px;
-      border: 1px solid rgba(255, 163, 94, 0.8);
-      align-items: center;
-    }
-
-    .tuhan-thumb {
-      flex: 0 0 110px;      /* 幅を固定して暴走防止 */
-      max-width: 110px;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
-    }
-
-    .tuhan-thumb img {
-      width: 100%;
-      height: auto;         /* 高さは自動にして見切れ防止 */
-      display: block;
-      object-fit: cover;
-    }
-
-    .tuhan-body {
-      flex: 1 1 auto;
-    }
-
-    .tuhan-label {
-      font-size: 0.64rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: #c46a00;
-      margin-bottom: 2px;
-    }
-
-    .tuhan-title {
-      font-size: 0.92rem;
-      font-weight: 800;
-      line-height: 1.45;
-      margin-bottom: 4px;
-    }
-
-    .tuhan-text {
-      font-size: 0.76rem;
-      color: #5b4630;
-      margin-bottom: 6px;
-    }
-
-    .tuhan-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.72rem;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #ffffff;
-      color: #c00000;
-      font-weight: 700;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .tuhan-btn-arrow {
-      font-size: 0.9em;
-      transform: translateY(0.5px);
-    }
-
-    /* =====================================
-       SNS Row
-    ===================================== */
-    .sns-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 12px;
-      margin: 22px auto 4px;
-      flex-wrap: wrap;
-    }
-
-    .sns-label {
-      font-size: 0.8rem;
-      color: #666;
-      white-space: nowrap;
-    }
-
-    .sns-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 1px solid #dddddd;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .sns-icon img {
-      width: 115%;
-      height: auto;
-      display: block;
-    }
-
-    /* ★ LINEだけ1.1倍に拡大（PC・スマホ共通） */
-    .sns-icon.line img {
-      width: 130%;
-      transform: scale(1.1);
-    }
-
-    .sns-icon:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.3);
-    }
-
-    /* =====================================
-       ホーム追加案内（SNSの下に表示）
-    ===================================== */
-    .install-hint {
-      margin: 16px auto 4px;
-      max-width: 640px;
-      font-size: 0.78rem;
-      color: #555;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 999px;
-      padding: 8px 14px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
-      border: 1px solid rgba(255, 180, 180, 0.7);
-      display: none; /* JSで制御 */
-    }
-
-    .install-hint-small {
-      font-size: 0.72rem;
-      color: #777;
-      display: block;
-      margin-top: 2px;
-    }
-
-    /* =====================================
-       Responsive
-    ===================================== */
-    @media (max-width: 900px) {
-      .main-grid {
-        grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr);
-      }
-    }
-
-    @media (max-width: 720px) {
-      body {
-        align-items: flex-start;
-      }
-
-      .container {
-        padding: 22px 14px;
-        margin: 12px 0;
-      }
-
-      .logo-area {
-        gap: 10px;
-      }
-
-      .logo-wrap img {
-        width: 70vw;
-      }
-
-      /* スマホではロゴの横線は非表示 */
-      .logo-line {
-        display: none;
-      }
-
-      .main-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      /* スマホではデコ線消して、下線をほぼ全幅に */
-      .heading-deco {
-        display: none;
-      }
-
-      .heading-line {
-        width: 95%;
-        margin-top: 12px;
-        display: block;   /* ★ SPではちゃんと表示 */
-      }
-
-      .title-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .tuhan-card {
-        flex-direction: row;
-      }
-
-      .tuhan-thumb {
-        flex-basis: 90px;
-        max-width: 90px;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>カードショップCLIMAX | ポータル</title>
+
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#d40000" />
+<link rel="apple-touch-icon" href="icons/climax_icon_192.png" />
+
+<script>
+  // Service Worker 登録（PWA用）
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker
+        .register("./service-worker.js")
+        .then(function (reg) {
+          console.log("ServiceWorker registered:", reg.scope);
+        })
+        .catch(function (err) {
+          console.log("ServiceWorker registration failed:", err);
+        });
+    });
+  }
+</script>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Noto Sans JP",system-ui,sans-serif;
+  background:radial-gradient(circle at top,#fff 0,#ffefe1 40%,#fce9ff 75%,#e5e9ff 100%);
+  display:flex;justify-content:center;align-items:center;min-height:100vh;
+  color:#222;
+}
+.container{
+  width:95%;max-width:1120px;
+  background:#fff;border-radius:26px;padding:26px;
+  box-shadow:0 20px 45px rgba(0,0,0,.25);
+  position:relative;
+  overflow:hidden;
+}
+.inner{position:relative;z-index:1;}
+
+/* =====================================
+   Logo
+===================================== */
+.logo-block { margin-bottom: 8px; }
+.logo-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 6px;
+}
+.logo-line {
+  flex: 1 1 auto;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 204, 0, 0),
+    rgba(255, 204, 0, 0.9),
+    rgba(255, 92, 0, 1),
+    rgba(216, 0, 0, 0)
+  );
+  position: relative;
+  overflow: hidden;
+}
+.logo-line::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 2px rgba(255, 92, 0, 0.5),
+    0 0 12px rgba(255, 92, 0, 1);
+  transform: translateY(-50%);
+}
+.logo-line.left::after { left: 0; right: auto; }
+.logo-wrap img {
+  max-width: 260px;
+  width: 50vw;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.25));
+}
+.logo-badges {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.logo-badge {
+  font-size: 0.7rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid #ffd4d4;
+  background: linear-gradient(135deg, #fff7f7, #ffe0e0);
+  color: #c00000;
+  box-shadow: 0 2px 6px rgba(255, 0, 0, 0.16);
+}
+.logo-badge.sub {
+  border-color: #e0e0e0;
+  background: linear-gradient(135deg, #f7f7f7, #ffffff);
+  color: #666;
+  box-shadow: none;
+}
+.logo-sub {
+  text-align: center;
+  font-size: 0.72rem;
+  color: #777;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+/* =====================================
+   Layout
+===================================== */
+.main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1.3fr);
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* =====================================
+   Heading
+===================================== */
+.heading-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  max-width: 780px;
+  margin-inline: auto;
+}
+.heading-deco {
+  flex: 1 1 auto;
+  height: 3px;
+  max-width: 200px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 233, 179, 0),
+    rgba(255, 233, 179, 1),
+    rgba(255, 209, 179, 1),
+    rgba(255, 233, 179, 0)
+  );
+  position: relative;
+  overflow: hidden;
+}
+.heading-deco::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.9),
+    transparent
+  );
+  animation: shine 3s linear infinite;
+}
+@keyframes shine {
+  0% { transform: translateX(-130%); }
+  100% { transform: translateX(130%); }
+}
+.heading { text-align: center; min-width: 240px; }
+.heading h1 {
+  margin: 0;
+  font-size: 1.32rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+.heading-line {
+  width: 400px;
+  height: 4px;
+  margin: 10px auto 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffea00, #ff9800, #e00000);
+  box-shadow:
+    0 0 14px rgba(255, 205, 0, 0.8),
+    0 0 25px rgba(255, 92, 0, 0.5);
+}
+@media (min-width: 721px) { .heading-line { display: none; } }
+
+/* =====================================
+   Buylist Cards
+===================================== */
+.title-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 720px;
+  margin: 0 auto 6px;
+}
+.title-card {
+  background: radial-gradient(circle at top, #fff9f2 0, #ffffff 50%, #ffe6d5 100%);
+  border-radius: 20px;
+  padding: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 144, 77, 0.55);
+  transition: 0.18s ease;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.title-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow:
+    0 15px 38px rgba(15, 23, 42, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.95);
+}
+
+/* 枠 */
+.title-thumb{
+  position: relative;
+  width: 100%;
+  padding-top: 46%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* デフォ：中央＆大きめ */
+.title-card .title-thumb img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  background: transparent;
+  display: block;
+  padding: 0;
+  transform: scale(1.16);
+}
+
+/* 文字あり（PSA/BOX & ワンピ）は少し上（＝そのまま） */
+.title-card.has-badge .title-thumb img{
+  transform: scale(1.16) translateY(-2%);
+}
+
+/* ✅文字なし2つ（ポケカ通常・デュエマ）は “強制的に下へ” */
+.title-card:not(.has-badge) .title-thumb img{
+  transform: scale(1.16) translateY(10%); /* ←ここで確実に下がる */
+}
+
+/* デュエマだけ少し強め（任意） */
+.title-card.duel .title-thumb img{
+  transform: scale(1.20) translateY(12%);
+}
+
+/* ✅ワンピがデカすぎて横見切れ対策：縮小 */
+.title-card.onepiece .title-thumb img{
+  transform: scale(1.03) translateY(-2%);
+}
+
+
+/* バッジ */
+.thumb-badge {
+  margin: 6px auto 0;
+  display: block;
+  width: fit-content;
+  text-align: center;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  font-size: 1.06rem;
+  color: #b10000;
+  background: #ffffff;
+  border: 2px solid #ff6b6b;
+  border-radius: 999px;
+  padding: 6px 16px;
+  line-height: 1;
+  user-select: none;
+  white-space: nowrap;
+}
+.thumb-badge.placeholder { visibility: hidden; }
+.title-card.onepiece .thumb-badge {
+  margin-top: 3px;
+  font-size: 1.1rem;
+  padding: 6px 18px;
+}
+
+.title-note {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: #777;
+  text-align: center;
+}
+
+/* =====================================
+   Side Column（Shop Info & 通販）
+===================================== */
+.side-column { display:flex; flex-direction:column; gap:14px; }
+.side-card {
+  background: linear-gradient(145deg, #ffffff, #fff7ed);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(209, 213, 219, 0.9);
+}
+.side-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+.shop-info-list { list-style:none; margin:0; padding-left:2px; font-size:0.8rem; color:#555; }
+.shop-info-list li + li { margin-top: 4px; }
+.shop-info-highlight { font-size:0.76rem; color:#c00000; margin-top:6px; }
+
+.tuhan-card {
+  display: flex;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  background: radial-gradient(circle at top left, #fff7e5 0, #ffe5dd 50%, #ffd0b1 100%);
+  border-radius: 18px;
+  padding: 12px;
+  border: 1px solid rgba(255, 163, 94, 0.8);
+  align-items: center;
+}
+.tuhan-thumb {
+  flex: 0 0 110px;
+  max-width: 110px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
+}
+.tuhan-thumb img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+.tuhan-body { flex: 1 1 auto; }
+.tuhan-label { font-size: 0.64rem; letter-spacing: 0.16em; text-transform: uppercase; color: #c46a00; margin-bottom: 2px; }
+.tuhan-title { font-size: 0.92rem; font-weight: 800; line-height: 1.45; margin-bottom: 4px; }
+.tuhan-text { font-size: 0.76rem; color: #5b4630; margin-bottom: 6px; }
+.tuhan-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #c00000;
+  font-weight: 700;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+.tuhan-btn-arrow { font-size: 0.9em; transform: translateY(0.5px); }
+
+/* SNS */
+.sns-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 22px auto 4px;
+  flex-wrap: wrap;
+}
+.sns-label { font-size: 0.8rem; color: #666; white-space: nowrap; }
+.sns-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #dddddd;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.sns-icon img { width: 115%; height: auto; display: block; }
+.sns-icon.line img { width: 130%; transform: scale(1.1); }
+.sns-icon:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.3);
+}
+
+/* install hint */
+.install-hint {
+  margin: 16px auto 4px;
+  max-width: 640px;
+  font-size: 0.78rem;
+  color: #555;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  padding: 8px 14px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
+  border: 1px solid rgba(255, 180, 180, 0.7);
+  display: none;
+}
+.install-hint-small { font-size: 0.72rem; color: #777; display: block; margin-top: 2px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .main-grid { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.3fr); }
+}
+@media (max-width: 720px) {
+  body { align-items: flex-start; }
+  .container { padding: 22px 14px; margin: 12px 0; }
+  .logo-area { gap: 10px; }
+  .logo-wrap img { width: 70vw; }
+  .logo-line { display: none; }
+  .main-grid { grid-template-columns: minmax(0, 1fr); }
+  .heading-deco { display: none; }
+  .heading-line { width: 95%; margin-top: 12px; display: block; }
+  .title-grid { grid-template-columns: minmax(0, 1fr); }
+  .tuhan-card { flex-direction: row; }
+  .tuhan-thumb { flex-basis: 90px; max-width: 90px; }
+  .title-card.onepiece .thumb-badge { margin-top: 2px; }
+  .title-card.has-badge .thumb-badge { margin-top: 5px; }
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="inner">
+<div class="container">
+  <div class="inner">
 
-      <!-- ロゴ周り -->
-      <div class="logo-block">
-        <div class="logo-area">
-          <div class="logo-line left"></div>
-          <div class="logo-wrap">
-            <img src="assets/logo.png" alt="カードショップCLIMAX ロゴ" />
-          </div>
-          <div class="logo-line"></div>
+    <!-- ロゴ周り -->
+    <div class="logo-block">
+      <div class="logo-area">
+        <div class="logo-line left"></div>
+        <div class="logo-wrap">
+          <img src="assets/logo.png" alt="カードショップCLIMAX ロゴ" />
         </div>
-        <div class="logo-badges">
-          <span class="logo-badge">BUYLIST PORTAL</span>
-          <span class="logo-badge sub">AKIHABARA TCG SHOP</span>
-        </div>
-        <div class="logo-sub">ONLINE / BUYLIST / SNS LINK</div>
+        <div class="logo-line"></div>
       </div>
-
-      <!-- メインレイアウト -->
-      <div class="main-grid">
-
-        <!-- 左カラム：買取タイトル -->
-        <section>
-          <div class="heading-wrap">
-            <div class="heading-deco left"></div>
-            <div class="heading">
-              <h1>買取カードゲームタイトル一覧</h1>
-              <div class="heading-line"></div>
-            </div>
-            <div class="heading-deco"></div>
-          </div>
-
-          <div class="title-grid">
-            <!-- ポケカ -->
-            <a
-              href="https://climaxcard.github.io/climax3/default/"
-              class="title-card"
-            >
-              <div class="title-thumb">
-                <img src="assets/pokeca.png" alt="ポケモンカードゲーム 買取リスト" />
-              </div>
-            </a>
-
-            <!-- デュエマ -->
-            <a
-              href="https://climaxcard.github.io/climax/default/"
-              class="title-card"
-            >
-              <div class="title-thumb">
-                <img src="assets/duel.png" alt="デュエル・マスターズ 買取リスト" />
-              </div>
-            </a>
-          </div>
-
-          <div class="title-note">
-            ※買取リストは随時更新されます。店舗在庫状況により買取上限数を設定させていただく場合がございます。
-          </div>
-        </section>
-
-        <!-- 右カラム：ショップ情報＆通販 -->
-        <aside class="side-column">
-          <div class="side-card">
-            <div class="side-title">カードショップCLIMAX 秋葉原店</div>
-            <ul class="shop-info-list">
-              <li>所在地：東京都千代田区外神田3-15-5 MNビル3階</li>
-              <li>取扱：ポケカ / デュエマ ほかトレカ各種</li>
-              <li>設備：デュエルスペース・オリパ自販機 など</li>
-            </ul>
-            <div class="shop-info-highlight">
-              最新情報は公式SNSでも発信中です。
-            </div>
-          </div>
-
-          <a
-            href="https://www.climax-card.jp/"
-            target="_blank"
-            rel="noopener"
-            class="side-card tuhan-card"
-          >
-            <div class="tuhan-thumb">
-              <img src="assets/tuhan.png" alt="カードショップCLIMAX 通販サイト" />
-            </div>
-            <div class="tuhan-body">
-              <div class="tuhan-label">ONLINE SHOP</div>
-              <div class="tuhan-title">
-                カードショップCLIMAX<br />通販サイト
-              </div>
-              <div class="tuhan-text">
-                シングルカード・オリパ・サプライなどをお買い求めいただけます。
-              </div>
-              <div class="tuhan-btn">
-                通販サイトを開く
-                <span class="tuhan-btn-arrow">▶</span>
-              </div>
-            </div>
-          </a>
-        </aside>
+      <div class="logo-badges">
+        <span class="logo-badge">BUYLIST PORTAL</span>
+        <span class="logo-badge sub">AKIHABARA TCG SHOP</span>
       </div>
-
-      <!-- SNS -->
-      <div class="sns-row">
-        <span class="sns-label">SNS公式アカウント：</span>
-
-        <a
-          href="https://x.com/climaxcard"
-          target="_blank"
-          rel="noopener"
-          class="sns-icon"
-          title="X（旧Twitter）"
-        >
-          <img src="assets/X.png" alt="X" />
-        </a>
-
-        <a
-          href="https://line.me/R/ti/p/@512nwjvn"
-          target="_blank"
-          rel="noopener"
-          class="sns-icon line"
-          title="LINE"
-        >
-          <img src="assets/LINE.png" alt="LINE" />
-        </a>
-
-        <a
-          href="https://www.instagram.com/cardshopclimax?igsh=d3VybGZraHlhZXUy&utm_source=qr"
-          target="_blank"
-          rel="noopener"
-          class="sns-icon"
-          title="Instagram"
-        >
-          <img src="assets/instagram.png" alt="Instagram" />
-        </a>
-
-        <a
-          href="https://www.tiktok.com/@climax932"
-          target="_blank"
-          rel="noopener"
-          class="sns-icon"
-          title="TikTok"
-        >
-          <img src="assets/tiktok.png" alt="TikTok" />
-        </a>
-      </div>
-
-      <!-- ホーム追加案内（SNSの下に表示） -->
-      <div id="install-hint" class="install-hint">
-        📱 スマホのホーム画面に追加しておくと、
-        CLIMAXポータルをアプリのようにすぐ開けます。<br />
-        <span class="install-hint-small">
-          iPhone：Safariの共有ボタン →「ホーム画面に追加」<br />
-          Android：Chromeのメニュー「︙」→「ホーム画面に追加」
-        </span>
-      </div>
-
+      <div class="logo-sub">ONLINE / BUYLIST / SNS LINK</div>
     </div>
+
+    <!-- メインレイアウト -->
+    <div class="main-grid">
+
+      <!-- 左カラム：買取タイトル -->
+      <section>
+        <div class="heading-wrap">
+          <div class="heading-deco left"></div>
+          <div class="heading">
+            <h1>買取カードゲームタイトル一覧</h1>
+            <div class="heading-line"></div>
+          </div>
+          <div class="heading-deco"></div>
+        </div>
+
+        <div class="title-grid">
+          <!-- ポケカ：文字なし（下寄せ対象） -->
+          <a href="https://climaxcard.github.io/climax3/default/" class="title-card">
+            <div class="title-thumb">
+              <img src="assets/pokeca.png" alt="ポケモンカードゲーム 買取リスト" />
+            </div>
+            <div class="thumb-badge placeholder">PH</div>
+          </a>
+
+          <!-- ポケカ PSA/BOX：文字あり -->
+          <a href="https://climaxcard.github.io/climax5/default/" class="title-card has-badge">
+            <div class="title-thumb">
+              <img src="assets/pokeca.png" alt="ポケモンカードゲーム PSA/BOX 買取リスト" />
+            </div>
+            <div class="thumb-badge">PSA/BOX</div>
+          </a>
+
+          <!-- デュエマ：文字なし（下寄せ対象） -->
+          <a href="https://climaxcard.github.io/climax/default/" class="title-card duel">
+            <div class="title-thumb">
+              <img src="assets/duel.png" alt="デュエル・マスターズ 買取リスト" />
+            </div>
+            <div class="thumb-badge placeholder">PH</div>
+          </a>
+
+          <!-- ワンピ：文字あり（縮小済み） -->
+          <a href="https://climaxcard.github.io/climax4/default/" class="title-card onepiece has-badge">
+            <div class="title-thumb">
+              <img src="assets/onepiece.png" alt="ONE PIECEカードゲーム 買取リスト" />
+            </div>
+            <div class="thumb-badge">PSA</div>
+          </a>
+        </div>
+
+        <div class="title-note">
+          ※買取リストは随時更新されます。店舗在庫状況により買取上限数を設定させていただく場合がございます。
+        </div>
+      </section>
+
+      <!-- 右カラム：ショップ情報＆通販 -->
+      <aside class="side-column">
+        <div class="side-card">
+          <div class="side-title">カードショップCLIMAX 秋葉原店</div>
+          <ul class="shop-info-list">
+            <li>所在地：東京都千代田区外神田3-15-5 MNビル3階</li>
+            <li>取扱：ポケカ / デュエマ ほかトレカ各種</li>
+            <li>設備：デュエルスペース・オリパ自販機 など</li>
+          </ul>
+          <div class="shop-info-highlight">
+            最新情報は公式SNSでも発信中です。
+          </div>
+        </div>
+
+        <a href="https://www.climax-card.jp/" target="_blank" rel="noopener" class="side-card tuhan-card">
+          <div class="tuhan-thumb">
+            <img src="assets/tuhan.png" alt="カードショップCLIMAX 通販サイト" />
+          </div>
+          <div class="tuhan-body">
+            <div class="tuhan-label">ONLINE SHOP</div>
+            <div class="tuhan-title">
+              カードショップCLIMAX<br />通販サイト
+            </div>
+            <div class="tuhan-text">
+              シングルカード・オリパ・サプライなどをお買い求めいただけます。
+            </div>
+            <div class="tuhan-btn">
+              通販サイトを開く
+              <span class="tuhan-btn-arrow">▶</span>
+            </div>
+          </div>
+        </a>
+      </aside>
+    </div>
+
+    <!-- SNS -->
+    <div class="sns-row">
+      <span class="sns-label">SNS公式アカウント：</span>
+
+      <a href="https://x.com/climaxcard" target="_blank" rel="noopener" class="sns-icon" title="X（旧Twitter）">
+        <img src="assets/X.png" alt="X" />
+      </a>
+
+      <a href="https://line.me/R/ti/p/@512nwjvn" target="_blank" rel="noopener" class="sns-icon line" title="LINE">
+        <img src="assets/LINE.png" alt="LINE" />
+      </a>
+
+      <a href="https://www.instagram.com/cardshopclimax?igsh=d3VybGZraHlhZXUy&utm_source=qr" target="_blank" rel="noopener" class="sns-icon" title="Instagram">
+        <img src="assets/instagram.png" alt="Instagram" />
+      </a>
+
+      <a href="https://www.tiktok.com/@climax932" target="_blank" rel="noopener" class="sns-icon" title="TikTok">
+        <img src="assets/tiktok.png" alt="TikTok" />
+      </a>
+    </div>
+
+    <!-- ホーム追加案内（SNSの下に表示） -->
+    <div id="install-hint" class="install-hint">
+      📱 スマホのホーム画面に追加しておくと、
+      CLIMAXポータルをアプリのようにすぐ開けます。<br />
+      <span class="install-hint-small">
+        iPhone：Safariの共有ボタン →「ホーム画面に追加」<br />
+        Android：Chromeのメニュー「︙」→「ホーム画面に追加」
+      </span>
+    </div>
+
   </div>
+</div>
 
-  <script>
-    // ★ Chrome純正の「ホーム画面に追加」固定バナーを抑止
-    let deferredPrompt = null;
+<script>
+  let deferredPrompt = null;
 
-    window.addEventListener('beforeinstallprompt', function (e) {
-      // 画面下のデフォルトバナーを出さない
-      e.preventDefault();
-      deferredPrompt = e;
-      console.log('beforeinstallprompt suppressed');
-      // 必要ならここで自前ボタンから deferredPrompt.prompt() を呼べる
-    });
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log('beforeinstallprompt suppressed');
+  });
 
-    // スマホ判定（Safari / Chrome 共通）
-    function isMobile() {
-      return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  function isMobile() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  function isInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+  }
+
+  window.addEventListener('load', function () {
+    var hint = document.getElementById('install-hint');
+    if (!hint) return;
+
+    if (isMobile() && !isInstalled()) {
+      hint.style.display = 'block';
     }
-
-    // すでにインストール済みPWAなら案内を出さない
-    function isInstalled() {
-      return window.matchMedia('(display-mode: standalone)').matches
-        || window.navigator.standalone === true;
-    }
-
-    window.addEventListener('load', function () {
-      var hint = document.getElementById('install-hint');
-      if (!hint) return;
-
-      // ★ iOS Safari と同じく、スマホで未インストールのときだけ
-      // SNSの下にテキストブロックとして表示（固定バナーではない）
-      if (isMobile() && !isInstalled()) {
-        hint.style.display = 'block';
-      }
-    });
-  </script>
+  });
+</script>
 </body>
 </html>
