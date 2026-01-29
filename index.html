@@ -3,14 +3,36 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>カードショップCLIMAX | ポータル</title>
+<meta name="description" content="ポケカ/デュエマ/ワンピ買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
+<link rel="canonical" href="https://climaxcard.github.io/climax-portal/" />
+
+<!-- =========================
+     OGP / SNS CARD
+========================= -->
+<meta property="og:title" content="カードショップCLIMAX | ポータル" />
+<meta property="og:description" content="ポケカ/デュエマ/ワンピ買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://climaxcard.github.io/climax-portal/" />
+<meta property="og:site_name" content="カードショップCLIMAX" />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:image" content="https://climaxcard.github.io/climax-portal/assets/ogp.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@climaxcard" />
+<meta name="twitter:title" content="カードショップCLIMAX | ポータル" />
+<meta name="twitter:description" content="ポケカ/デュエマ/ワンピ買取リスト＆通販・SNSリンク集。" />
+<meta name="twitter:image" content="https://climaxcard.github.io/climax-portal/assets/ogp.png" />
+<!-- ========================= -->
 
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#d40000" />
 <link rel="apple-touch-icon" href="icons/climax_icon_192.png" />
 
 <script>
-  // Service Worker 登録（PWA用）
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
       navigator.serviceWorker
@@ -26,6 +48,7 @@
 </script>
 
 <style>
+/* ======== 以下CSSは元のまま ======== */
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -121,6 +144,27 @@ body{
   margin-top: 6px;
   margin-bottom: 10px;
 }
+
+/* =====================================
+   Payment
+===================================== */
+.payment-group + .payment-group {
+  margin-top: 10px;
+}
+
+.payment-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #c00000;
+  margin-bottom: 2px;
+}
+
+.payment-list {
+  font-size: 0.72rem;
+  color: #555;
+  line-height: 1.55;
+}
+
 
 /* =====================================
    Layout
@@ -515,6 +559,34 @@ body{
             最新情報は公式SNSでも発信中です。
           </div>
         </div>
+
+<!-- 決済方法 -->
+<div class="side-card">
+  <div class="side-title">ご利用可能な決済</div>
+
+  <div class="payment-group">
+    <div class="payment-title">クレジットカード</div>
+    <div class="payment-list">
+      VISA / Master / JCB / AMEX / Diners / Discover
+    </div>
+  </div>
+
+  <div class="payment-group">
+    <div class="payment-title">電子マネー・スマホ決済</div>
+    <div class="payment-list payment-ic">
+  iD / QUICPay+ / Kitaca / Suica / PASMO / TOICA / manaca / ICOCA / SUGOCA / nimoca / はやかけん
+</div>
+
+  </div>
+
+  <div class="payment-group">
+    <div class="payment-title">コード決済</div>
+    <div class="payment-list">
+      PayPay / d払い / au PAY / メルペイ / 楽天PAY
+    </div>
+  </div>
+</div>
+
 
         <a href="https://www.climax-card.jp/" target="_blank" rel="noopener" class="side-card tuhan-card">
           <div class="tuhan-thumb">
