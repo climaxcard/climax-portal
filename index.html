@@ -1,18 +1,18 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <title>カードショップCLIMAX | ポータル</title>
-<meta name="description" content="ポケカ/デュエマ/ワンピ買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
+<meta name="description" content="ポケカ/デュエマ/ワンピ/遊戯王買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
 <link rel="canonical" href="https://climaxcard.github.io/climax-portal/" />
 
 <!-- =========================
      OGP / SNS CARD
 ========================= -->
 <meta property="og:title" content="カードショップCLIMAX | ポータル" />
-<meta property="og:description" content="ポケカ/デュエマ/ワンピ買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
+<meta property="og:description" content="ポケカ/デュエマ/ワンピ/遊戯王買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://climaxcard.github.io/climax-portal/" />
 <meta property="og:site_name" content="カードショップCLIMAX" />
@@ -24,7 +24,7 @@
 <meta name="twitter:image" content="https://climaxcard.github.io/climax-portal/assets/ogp_v4.jpg" />
 <meta name="twitter:site" content="@climaxcard" />
 <meta name="twitter:title" content="カードショップCLIMAX | ポータル" />
-<meta name="twitter:description" content="ポケカ/デュエマ/ワンピ買取リスト＆通販・SNSリンク集。" />
+<meta name="twitter:description" content="ポケカ/デュエマ/ワンピ/遊戯王買取リスト＆通販・SNSリンク集。" />
 <meta name="twitter:image" content="https://climaxcard.github.io/climax-portal/assets/ogp.png" />
 <!-- ========================= -->
 
@@ -294,7 +294,7 @@ body{
   transform: scale(1.16);
 }
 
-/* 文字あり（PSA/BOX & ワンピ）は少し上（＝そのまま） */
+/* 文字あり（PSA/BOX & ワンピ/遊戯王）は少し上（＝そのまま） */
 .title-card.has-badge .title-thumb img{
   transform: scale(1.16) translateY(-2%);
 }
@@ -309,8 +309,9 @@ body{
   transform: scale(1.20) translateY(12%);
 }
 
-/* ✅ワンピがデカすぎて横見切れ対策：縮小 */
-.title-card.onepiece .title-thumb img{
+/* ✅ワンピ/遊戯王がデカすぎて横見切れ対策：縮小 */
+.title-card.onepiece .title-thumb img,
+.title-card.yugioh .title-thumb img{
   transform: scale(1.03) translateY(-2%);
 }
 
@@ -334,7 +335,8 @@ body{
   white-space: nowrap;
 }
 .thumb-badge.placeholder { visibility: hidden; }
-.title-card.onepiece .thumb-badge {
+.title-card.onepiece .thumb-badge,
+.title-card.yugioh .thumb-badge {
   margin-top: 3px;
   font-size: 1.1rem;
   padding: 6px 18px;
@@ -464,10 +466,31 @@ body{
   .main-grid { grid-template-columns: minmax(0, 1fr); }
   .heading-deco { display: none; }
   .heading-line { width: 95%; margin-top: 12px; display: block; }
-  .title-grid { grid-template-columns: minmax(0, 1fr); }
+  .title-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .title-card {
+    padding: 8px;
+    border-radius: 16px;
+  }
+
+  .thumb-badge {
+    font-size: 0.78rem;
+    padding: 5px 10px;
+    letter-spacing: 0.12em;
+  }
+
+  .title-card.onepiece .thumb-badge {
+    margin-top: 5px;
+    font-size: 0.78rem;
+    padding: 5px 10px;
+  }
   .tuhan-card { flex-direction: row; }
   .tuhan-thumb { flex-basis: 90px; max-width: 90px; }
-  .title-card.onepiece .thumb-badge { margin-top: 2px; }
+  .title-card.onepiece .thumb-badge,
+  .title-card.yugioh .thumb-badge { margin-top: 2px; }
   .title-card.has-badge .thumb-badge { margin-top: 5px; }
 }
 </style>
@@ -539,6 +562,14 @@ body{
             </div>
             <div class="thumb-badge">PSA</div>
           </a>
+
+          <!-- 遊戯王：文字あり（PSA） -->
+          <a href="https://climaxcard.github.io/climax6/default/" class="title-card yugioh has-badge">
+            <div class="title-thumb">
+              <img src="assets/yugioh.png" alt="遊戯王OCG PSA 買取リスト" />
+            </div>
+            <div class="thumb-badge">PSA</div>
+          </a>
         </div>
 
         <div class="title-note">
@@ -552,7 +583,7 @@ body{
           <div class="side-title">カードショップCLIMAX 秋葉原店</div>
           <ul class="shop-info-list">
             <li>所在地：東京都千代田区外神田3-15-5 MNビル3階</li>
-            <li>取扱：ポケカ / デュエマ ほかトレカ各種</li>
+            <li>取扱：ポケカ / デュエマ / ワンピ / 遊戯王 ほかトレカ各種</li>
             <li>設備：デュエルスペース・オリパ自販機 など</li>
           </ul>
           <div class="shop-info-highlight">
@@ -672,3 +703,5 @@ body{
 </script>
 </body>
 </html>
+
+
