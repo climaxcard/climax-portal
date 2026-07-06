@@ -5,27 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <title>カードショップCLIMAX | ポータル</title>
-<meta name="description" content="ポケカ/デュエマ/ワンピ/遊戯王買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
+<meta name="description" content="ポケカ/デュエマ/ワンピ/遊戯王/ヴァイス買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
 <link rel="canonical" href="https://kaitori.climax-card.com/portal/" />
 
 <!-- =========================
      OGP / SNS CARD
 ========================= -->
 <meta property="og:title" content="カードショップCLIMAX | ポータル" />
-<meta property="og:description" content="ポケカ/デュエマ/ワンピ/遊戯王買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
+<meta property="og:description" content="ポケカ/デュエマ/ワンピ/遊戯王/ヴァイス買取リスト＆通販・SNSリンク集。秋葉原カードショップCLIMAX公式ポータル。" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://kaitori.climax-card.com/portal/" />
 <meta property="og:site_name" content="カードショップCLIMAX" />
 <meta property="og:locale" content="ja_JP" />
-<meta property="og:image" content="https://climaxcard.github.io/climax-portal/assets/ogp_v4.jpg" />
+<meta property="og:image" content="https://kaitori.climax-card.com/portal/assets/ogp_v4.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
-<meta name="twitter:image" content="https://climaxcard.github.io/climax-portal/assets/ogp_v4.jpg" />
+<meta name="twitter:image" content="https://kaitori.climax-card.com/portal/assets/ogp_v4.jpg" />
 <meta name="twitter:site" content="@climaxcard" />
 <meta name="twitter:title" content="カードショップCLIMAX | ポータル" />
-<meta name="twitter:description" content="ポケカ/デュエマ/ワンピ/遊戯王買取リスト＆通販・SNSリンク集。" />
-<meta name="twitter:image" content="https://climaxcard.github.io/climax-portal/assets/ogp.png" />
+<meta name="twitter:description" content="ポケカ/デュエマ/ワンピ/遊戯王/ヴァイス買取リスト＆通販・SNSリンク集。" />
+<meta name="twitter:image" content="https://kaitori.climax-card.com/portal/assets/ogp.png" />
 <!-- ========================= -->
 
 <link rel="manifest" href="/portal/manifest.json" />
@@ -315,7 +315,8 @@ body{
 
 /* ✅ワンピ/遊戯王がデカすぎて横見切れ対策：縮小 */
 .title-card.onepiece .title-thumb img,
-.title-card.yugioh .title-thumb img{
+.title-card.yugioh .title-thumb img,
+.title-card.weiss .title-thumb img{
   transform: scale(1.03) translateY(-2%);
 }
 
@@ -340,7 +341,8 @@ body{
 }
 .thumb-badge.placeholder { visibility: hidden; }
 .title-card.onepiece .thumb-badge,
-.title-card.yugioh .thumb-badge {
+.title-card.yugioh .thumb-badge,
+.title-card.weiss .thumb-badge {
   margin-top: 3px;
   font-size: 1.1rem;
   padding: 6px 18px;
@@ -494,10 +496,12 @@ body{
   .tuhan-card { flex-direction: row; }
   .tuhan-thumb { flex-basis: 90px; max-width: 90px; }
   .title-card.onepiece .thumb-badge,
-  .title-card.yugioh .thumb-badge { margin-top: 2px; }
+  .title-card.yugioh .thumb-badge,
+  .title-card.weiss .thumb-badge { margin-top: 2px; }
   .title-card.has-badge .thumb-badge { margin-top: 5px; }
 
-  .title-card.yugioh .thumb-badge {
+  .title-card.yugioh .thumb-badge,
+  .title-card.weiss .thumb-badge {
     font-size: 0.66rem;
     padding: 4px 8px;
     letter-spacing: 0.08em;
@@ -580,6 +584,14 @@ body{
             </div>
             <div class="thumb-badge">PSA</div>
           </a>
+
+          <!-- ヴァイスシュヴァルツ：文字あり（PSA） -->
+          <a href="https://kaitori.climax-card.com/weiss/default/" class="title-card weiss has-badge">
+            <div class="title-thumb">
+              <img src="assets/weiss.png" alt="ヴァイスシュヴァルツ PSA 買取リスト" />
+            </div>
+            <div class="thumb-badge">PSA</div>
+          </a>
         </div>
 
         <div class="title-note">
@@ -593,7 +605,7 @@ body{
           <div class="side-title">カードショップCLIMAX 秋葉原店</div>
           <ul class="shop-info-list">
             <li>所在地：東京都千代田区外神田3-15-5 MNビル3階</li>
-            <li>取扱：ポケカ / デュエマ / ワンピ / 遊戯王 ほかトレカ各種</li>
+            <li>取扱：ポケカ / デュエマ / ワンピ / 遊戯王 / ヴァイス ほかトレカ各種</li>
             <li>設備：デュエルスペース・オリパ自販機 など</li>
           </ul>
           <div class="shop-info-highlight">
@@ -713,6 +725,7 @@ body{
 </script>
 </body>
 </html>
+
 
 
 
