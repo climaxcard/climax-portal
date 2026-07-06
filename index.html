@@ -28,15 +28,15 @@
 <meta name="twitter:image" content="https://kaitori.climax-card.com/portal/assets/ogp.png" />
 <!-- ========================= -->
 
-<link rel="manifest" href="manifest.json" />
+<link rel="manifest" href="/portal/manifest.json" />
 <meta name="theme-color" content="#d40000" />
-<link rel="apple-touch-icon" href="icons/climax_icon_192.png" />
+<link rel="apple-touch-icon" href="/portal/icons/climax_icon_192.png" />
 
 <script>
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
       navigator.serviceWorker
-        .register("./service-worker.js")
+        .register("/portal/service-worker.js")
         .then(function (reg) {
           console.log("ServiceWorker registered:", reg.scope);
         })
@@ -515,7 +515,7 @@ body{
       <div class="logo-area">
         <div class="logo-line left"></div>
         <div class="logo-wrap">
-          <img src="assets/logo.png" alt="カードショップCLIMAX ロゴ" />
+          <img src="/portal/assets/logo.png" alt="カードショップCLIMAX ロゴ" />
         </div>
         <div class="logo-line"></div>
       </div>
@@ -544,7 +544,7 @@ body{
           <!-- ポケカ：文字なし（下寄せ対象） -->
           <a href="https://kaitori.climax-card.com/pokeca/default/" class="title-card">
             <div class="title-thumb">
-              <img src="assets/pokeca.png" alt="ポケモンカードゲーム 買取リスト" />
+              <img src="/portal/assets/pokeca.png" alt="ポケモンカードゲーム 買取リスト" />
             </div>
             <div class="thumb-badge placeholder">PH</div>
           </a>
@@ -552,7 +552,7 @@ body{
           <!-- ポケカ PSA/BOX：文字あり -->
           <a href="https://kaitori.climax-card.com/pokemon/default/" class="title-card has-badge">
             <div class="title-thumb">
-              <img src="assets/pokeca.png" alt="ポケモンカードゲーム PSA/BOX 買取リスト" />
+              <img src="/portal/assets/pokeca.png" alt="ポケモンカードゲーム PSA/BOX 買取リスト" />
             </div>
             <div class="thumb-badge">PSA/BOX</div>
           </a>
@@ -560,7 +560,7 @@ body{
           <!-- デュエマ：文字なし（下寄せ対象） -->
           <a href="https://kaitori.climax-card.com/default/" class="title-card duel">
             <div class="title-thumb">
-              <img src="assets/duel.png" alt="デュエル・マスターズ 買取リスト" />
+              <img src="/portal/assets/duel.png" alt="デュエル・マスターズ 買取リスト" />
             </div>
             <div class="thumb-badge placeholder">PH</div>
           </a>
@@ -568,15 +568,15 @@ body{
           <!-- ワンピ：文字あり（縮小済み） -->
           <a href="https://kaitori.climax-card.com/onepiece/default/" class="title-card onepiece has-badge">
             <div class="title-thumb">
-              <img src="assets/onepiece.png" alt="ONE PIECEカードゲーム 買取リスト" />
+              <img src="/portal/assets/onepiece.png" alt="ONE PIECEカードゲーム 買取リスト" />
             </div>
             <div class="thumb-badge">PSA</div>
           </a>
 
           <!-- 遊戯王：文字あり（PSA） -->
-          <a href="https://kaitori.climax-card.com/yugioh/default/" class="title-card yugioh has-badge">
+          <a href="https://kaitori.climax-card.com/onepiece/default/" class="title-card yugioh has-badge">
             <div class="title-thumb">
-              <img src="assets/yugioh.png" alt="遊戯王OCG PSA 買取リスト" />
+              <img src="/portal/assets/yugioh.png" alt="遊戯王OCG PSA 買取リスト" />
             </div>
             <div class="thumb-badge">PSA</div>
           </a>
@@ -631,7 +631,7 @@ body{
 
         <a href="https://www.climax-card.jp/" target="_blank" rel="noopener" class="side-card tuhan-card">
           <div class="tuhan-thumb">
-            <img src="assets/tuhan.png" alt="カードショップCLIMAX 通販サイト" />
+            <img src="/portal/assets/tuhan.png" alt="カードショップCLIMAX 通販サイト" />
           </div>
           <div class="tuhan-body">
             <div class="tuhan-label">ONLINE SHOP</div>
@@ -655,19 +655,19 @@ body{
       <span class="sns-label">SNS公式アカウント：</span>
 
       <a href="https://x.com/climaxcard" target="_blank" rel="noopener" class="sns-icon" title="X（旧Twitter）">
-        <img src="assets/X.png" alt="X" />
+        <img src="/portal/assets/X.png" alt="X" />
       </a>
 
       <a href="https://line.me/R/ti/p/@512nwjvn" target="_blank" rel="noopener" class="sns-icon line" title="LINE">
-        <img src="assets/LINE.png" alt="LINE" />
+        <img src="/portal/assets/LINE.png" alt="LINE" />
       </a>
 
       <a href="https://www.instagram.com/cardshopclimax?igsh=d3VybGZraHlhZXUy&utm_source=qr" target="_blank" rel="noopener" class="sns-icon" title="Instagram">
-        <img src="assets/instagram.png" alt="Instagram" />
+        <img src="/portal/assets/instagram.png" alt="Instagram" />
       </a>
 
       <a href="https://www.tiktok.com/@climax.card?_r=1&_t=ZS-92xBq1BJbro" target="_blank" rel="noopener" class="sns-icon" title="TikTok">
-        <img src="assets/tiktok.png" alt="TikTok" />
+        <img src="/portal/assets/tiktok.png" alt="TikTok" />
       </a>
     </div>
 
@@ -713,6 +713,8 @@ body{
 </script>
 </body>
 </html>
+
+
 
 
 
