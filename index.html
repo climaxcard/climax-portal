@@ -358,7 +358,17 @@ body{
 /* =====================================
    Side Column（Shop Info & 通販）
 ===================================== */
-.side-column { display:flex; flex-direction:column; gap:14px; }
+.side-column {
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+@media (min-width: 721px) {
+  .side-column {
+    padding-top: 64px;
+  }
+}
 .side-card {
   background: linear-gradient(145deg, #ffffff, #fff7ed);
   border-radius: 18px;
@@ -497,15 +507,13 @@ body{
   .tuhan-thumb { flex-basis: 90px; max-width: 90px; }
   .title-card.onepiece .thumb-badge,
   .title-card.yugioh .thumb-badge,
-  .title-card.weiss .thumb-badge { margin-top: 2px; }
-  .title-card.has-badge .thumb-badge { margin-top: 5px; }
-
-  .title-card.yugioh .thumb-badge,
   .title-card.weiss .thumb-badge {
-    font-size: 0.66rem;
-    padding: 4px 8px;
-    letter-spacing: 0.08em;
+    margin-top: 5px;
+    font-size: 0.78rem;
+    padding: 5px 10px;
+    letter-spacing: 0.12em;
   }
+  .title-card.has-badge .thumb-badge { margin-top: 5px; }
 }
 </style>
 </head>
@@ -570,7 +578,7 @@ body{
           </a>
 
           <!-- ワンピ：文字あり（縮小済み） -->
-          <a href="https://climaxcard.github.io/climax4/" class="title-card onepiece has-badge">
+          <a href="https://kaitori.climax-card.com/onepiece/default/" class="title-card onepiece has-badge">
             <div class="title-thumb">
               <img src="assets/onepiece.png" alt="ONE PIECEカードゲーム 買取リスト" />
             </div>
@@ -725,6 +733,8 @@ body{
 </script>
 </body>
 </html>
+
+
 
 
 
